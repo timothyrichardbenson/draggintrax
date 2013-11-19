@@ -1,0 +1,15 @@
+#canvas {
+	margin-left: auto;
+    margin-right: auto;
+    height: 400px;
+    width: 400px;
+    background-color: gray;
+}
+
+#canvas2 {
+	margin-left: auto;
+    margin-right: auto;
+    height: 400px;
+    width: 400px;
+    background-color: green;
+}
