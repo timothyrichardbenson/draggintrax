@@ -10,33 +10,6 @@ var source;
 var analyser;
 var xhr;
 
-// Polyfil for animatiosn from 
-// http://paulirish.com/2011/requestanimationframe-for-smart-animating/
-(function() {
-    var lastTime = 0;
-    var vendors = ['ms', 'moz', 'webkit', 'o'];
-    for(var x = 0; x < vendors.length && !window.requestAnimationFrame; ++x) {
-        window.requestAnimationFrame = window[vendors[x]+'RequestAnimationFrame'];
-        window.cancelAnimationFrame = 
-          window[vendors[x]+'CancelAnimationFrame'] || window[vendors[x]+'CancelRequestAnimationFrame'];
-    }
- 
-    if (!window.requestAnimationFrame)
-        window.requestAnimationFrame = function(callback, element) {
-            var currTime = new Date().getTime();
-            var timeToCall = Math.max(0, 16 - (currTime - lastTime));
-            var id = window.setTimeout(function() { callback(currTime + timeToCall); }, 
-              timeToCall);
-            lastTime = currTime + timeToCall;
-            return id;
-        };
- 
-    if (!window.cancelAnimationFrame)
-        window.cancelAnimationFrame = function(id) {
-            clearTimeout(id);
-        };
-}());
-
 function initAudio(data) {
     source = context.createBufferSource();
     
@@ -44,7 +17,7 @@ function initAudio(data) {
         context.decodeAudioData(data, function(buffer) {
             source.buffer = buffer;
             createAudio();
-        }, function(e) {
+	}, function(e) {
             console.log(e);
         });
     } else {
@@ -103,27 +76,14 @@ function draw() {
       }
 }
 
+/*
+ * dropped file event listener
+ */
 function dropEvent(evt) {
     evt.stopPropagation();
     evt.preventDefault();
     
     var droppedFiles = evt.dataTransfer.files;
-    
-    /*
-    var formData = new FormData();
-    
-    for(var i = 0; i < droppedFiles.length; ++i) {
-        var file = droppedFiles[i];
-        
-        files.append(file.name, file);
-    }
-    
-    xhr = new XMLHttpRequest();
-    xhr.open("POST", settings.url);  
-    xhr.onreadystatechange = handleResult;
-    xhr.send(formData);
-    */
-    
     var reader = new FileReader();
     
     reader.onload = function(fileEvent) {
@@ -134,25 +94,11 @@ function dropEvent(evt) {
     reader.readAsArrayBuffer(droppedFiles[0]);
 }
 
-function handleResult() {
-    if (xhr.readyState == 4 /* complete */) {
-        switch(xhr.status) {
-            case 200: /* Success */
-                initAudio(request.response);
-                break;
-            default:
-                break;
-        }
-        xhr = null;
-    }      
-}
-
 function dragOver(evt) {
     evt.stopPropagation();
- 
-   evt.preventDefault();
+    evt.preventDefault();
     return false;
 }
 
-canvas.addEventListener('drop', dropEvent, false);
-canvas.addEventListener('dragover', dragOver, false);
+canvas.addEventListener('drop', dropEvent);
+canvas.addEventListener('dragover', dragOver);
