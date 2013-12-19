@@ -98,6 +98,7 @@ var DragginTrax = function(canvas) {
     }
     
     function dragOver(evt) {
+	evt.target.style['background-color'] = 'green';
 	evt.stopPropagation();
 	evt.preventDefault();
 	return false;
@@ -110,5 +111,7 @@ var DragginTrax = function(canvas) {
 
 
 var c1 = document.getElementById("canvas");
+var c2 = document.getElementById("canvas2");
 
 var dt = new DragginTrax(c1);
+var dt = new DragginTrax(c2);
